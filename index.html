@@ -49,11 +49,14 @@
 
     /* —— Projects Cards —— */
     .projects-grid {
-      display: grid; grid-template-columns: repeat(auto-fit,minmax(240px,1fr)); gap: 1.5rem;
+      display: flex; 
+      flex-direction: column;
+      gap: 1.5rem;
     }
     .project-card {
       border: 1px solid #eee; border-radius: 6px; overflow: hidden;
       transition: transform 0.2s, box-shadow 0.2s;
+      width: 100%;
     }
     .project-card:hover {
       transform: translateY(-4px);
@@ -139,9 +142,9 @@
       <div class="skill">Tableau</div>
       <div class="skill">Excel</div>
       <div class="skill">Power BI</div>
-      <div class="skill">Business Analysis</div>
       <div class="skill">AWS</div>
       <div class="skill">GCP</div>
+      <div class="skill">Business Analysis</div> 
       <div class="skill">Data Visualization</div>
       <div class="skill">Statistics</div>
       <div class="skill">Vibe Coding</div>
@@ -166,6 +169,7 @@
         <h3>Sales Dashboard</h3>
         <p>Interactive Tableau dashboard that reduced traffic accidents in Chicago by 30%.</p>
       </div>
+      
       <div class="project-card">
         <img src="assets/story1.png" alt="Project 2 screenshot">
         <h3>Demand Forecasting</h3>
