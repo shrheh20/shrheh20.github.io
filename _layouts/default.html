@@ -1,52 +1,146 @@
 <!DOCTYPE html>
-<html lang="{{ site.lang | default: "en-US" }}">
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Shreyas Udupa – Data Analyst</title>
+  <style>
+    /* —— Reset & Base —— */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; font-family: system-ui, sans-serif; }
+    body { color: #111; background: #fff; line-height: 1.6; }
+    a { color: #007ACC; text-decoration: none; }
+    a:hover { text-decoration: underline; }
 
-  <head>
-    <meta charset='utf-8'>
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width,maximum-scale=2">
-    <link rel="stylesheet" type="text/css" media="screen" href="{{ '/assets/css/style.css?v=' | append: site.github.build_revision | relative_url }}">
+    /* —— Header —— */
+    header {
+      position: fixed; top: 0; left: 0; width: 100%;
+      padding: 1rem 2rem;
+      display: flex; justify-content: space-between; align-items: center;
+      background: transparent;
+      transition: background 0.3s, box-shadow 0.3s;
+    }
+    header.scrolled {
+      background: #fff;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    nav a { margin-left: 1rem; font-weight: 500; }
 
-{% seo %}
-    {% include head-custom.html %}
-  </head>
+    /* —— Sections —— */
+    section {
+      max-width: 800px; margin: 0 auto;
+      padding: 6rem 2rem;
+    }
+    #hero { display: flex; align-items: center; justify-content: center; height: 100vh; }
+    #hero h1 { font-size: 3rem; margin-bottom: 1rem; }
+    #hero p { font-size: 1.25rem; color: #555; }
 
-  <body>
+    h2 { font-size: 2rem; margin-bottom: 1rem; }
+    .btn { display: inline-block; margin-top: 1.5rem; padding: 0.75rem 1.5rem; border: 2px solid #007ACC; border-radius: 4px; font-weight: 600; }
 
-    <!-- HEADER -->
-    <div id="header_wrap" class="outer">
-        <header class="inner">
-          {% if site.github.is_project_page %}
-            <a id="forkme_banner" href="{{ site.github.repository_url }}">View on GitHub</a>
-          {% endif %}
+    /* —— Skills Grid —— */
+    .skills-grid {
+      display: grid; grid-template-columns: repeat(auto-fit,minmax(120px,1fr)); gap: 1rem;
+    }
+    .skill {
+      border: 1px solid #ddd; border-radius: 4px; padding: 0.75rem;
+      text-align: center; font-weight: 500;
+    }
 
-          <h1 id="project_title">{{ site.title | default: site.github.repository_name }}</h1>
-          <h2 id="project_tagline">{{ site.description | default: site.github.project_tagline }}</h2>
+    /* —— Projects Cards —— */
+    .projects-grid {
+      display: grid; grid-template-columns: repeat(auto-fit,minmax(240px,1fr)); gap: 1.5rem;
+    }
+    .project-card {
+      border: 1px solid #eee; border-radius: 6px; overflow: hidden;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .project-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    .project-card img { width: 100%; display: block; }
+    .project-card h3 { padding: 1rem; font-size: 1.1rem; }
+    .project-card p { padding: 0 1rem 1rem; color: #555; }
 
-          {% if site.show_downloads %}
-            <section id="downloads">
-              <a class="zip_download_link" href="{{ site.github.zip_url }}">Download this project as a .zip file</a>
-              <a class="tar_download_link" href="{{ site.github.tar_url }}">Download this project as a tar.gz file</a>
-            </section>
-          {% endif %}
-        </header>
+    /* —— Contact —— */
+    #contact ul { list-style: none; display: flex; gap: 1rem; margin-top: 1rem; }
+    #contact li a { font-weight: 500; }
+  </style>
+</head>
+<body>
+  <!-- HEADER -->
+  <header id="site-header">
+    <a href="#hero">Your Name</a>
+    <nav>
+      <a href="#about">About</a>
+      <a href="#skills">Skills</a>
+      <a href="#projects">Projects</a>
+      <a href="#contact">Contact</a>
+    </nav>
+  </header>
+
+  <!-- HERO -->
+  <section id="hero">
+    <div>
+      <h1>Hi — I’m <span style="color:#007ACC">Your Name</span></h1>
+      <p>Data Analyst │ Python · SQL · Tableau</p>
+      <a href="#projects" class="btn">View Projects</a>
     </div>
+  </section>
 
-    <!-- MAIN CONTENT -->
-    <div id="main_content_wrap" class="outer">
-      <section id="main_content" class="inner">
-        {{ content }}
-      </section>
-    </div>
+  <!-- ABOUT -->
+  <section id="about">
+    <h2>About</h2>
+    <p>I’m a data enthusiast with a passion for turning raw numbers into actionable insights. Currently graduating with an MS in Information Management from UIUC, I’ve helped clients optimize workflows, improve decision-making, and drive growth through data visualization and predictive modeling.</p>
+    <p><a href="/Users/shrheh/Documents/shrheh20.github.io/ShreyasUdupa_2025_resume.pdf" download>Download Résumé (PDF)</a></p>
+  </section>
 
-    <!-- FOOTER  -->
-    <div id="footer_wrap" class="outer">
-      <footer class="inner">
-        {% if site.github.is_project_page %}
-        <p class="copyright">{{ site.title | default: site.github.repository_name }} maintained by <a href="{{ site.github.owner_url }}">{{ site.github.owner_name }}</a></p>
-        {% endif %}
-        <p>Published with <a href="https://pages.github.com">GitHub Pages</a></p>
-      </footer>
+  <!-- SKILLS -->
+  <section id="skills">
+    <h2>Skills</h2>
+    <div class="skills-grid">
+      <div class="skill">Python</div>
+      <div class="skill">SQL</div>
+      <div class="skill">Tableau</div>
+      <div class="skill">Excel</div>
+      <div class="skill">Power BI</div>
+      <div class="skill">Git</div>
     </div>
-  </body>
+  </section>
+
+  <!-- PROJECTS -->
+  <section id="projects">
+    <h2>Projects</h2>
+    <div class="projects-grid">
+      <!-- Example project card -->
+      <div class="project-card">
+        <img src="assets/dashboard1.png" alt="Project 1 screenshot">
+        <h3>Sales Dashboard</h3>
+        <p>Interactive Tableau dashboard that reduced reporting time by 30%.</p>
+      </div>
+      <!-- Add more cards similarly -->
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section id="contact">
+    <h2>Contact</h2>
+    <p>Let’s build something together—reach out!</p>
+    <ul>
+      <li><a href="shreyas.udupa20@gmail.com">Email</a></li>
+      <li><a href="https://linkedin.com/in/shreyasudupa/" target="_blank">LinkedIn</a></li>
+      <li><a href="https://github.com/shrheh20" target="_blank">GitHub</a></li>
+    </ul>
+  </section>
+
+  <script>
+    // Header background on scroll
+    window.addEventListener('scroll', () => {
+      document.getElementById('site-header')
+        .classList.toggle('scrolled', window.scrollY > 50);
+    });
+  </script>
+</body>
 </html>
+
