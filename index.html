@@ -63,6 +63,40 @@
     .project-card h3 { padding: 1rem; font-size: 1.1rem; }
     .project-card p { padding: 0 1rem 1rem; color: #555; }
 
+    /* —— Carousel Base —— */
+.carousel {
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  height: 200px;         /* adjust height as needed */
+  border-radius: 6px 6px 0 0; /* match project-card */
+}
+.carousel-inner {
+  display: flex;
+  transition: transform 0.3s ease;
+  height: 100%;
+}
+.carousel-inner img {
+  flex: 0 0 100%;
+  object-fit: cover;
+  height: 100%;
+}
+
+/* —— Controls —— */
+.carousel-control {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(255,255,255,0.8);
+  border: none;
+  padding: 0.25rem 0.5rem;
+  font-size: 1.5rem;
+  cursor: pointer;
+  border-radius: 4px;
+}
+.carousel-control.prev { left: 0.5rem; }
+.carousel-control.next { right: 0.5rem; }
+
     /* —— Contact —— */
     #contact ul { list-style: none; display: flex; gap: 1rem; margin-top: 1rem; }
     #contact li a { font-weight: 500; }
@@ -105,7 +139,12 @@
       <div class="skill">Tableau</div>
       <div class="skill">Excel</div>
       <div class="skill">Power BI</div>
-      <div class="skill">Git</div>
+      <div class="skill">Business Analysis</div>
+      <div class="skill">AWS</div>
+      <div class="skill">GCP</div>
+      <div class="skill">Data Visualization</div>
+      <div class="skill">Statistics</div>
+      <div class="skill">Vibe Coding</div>
     </div>
   </section>
 
@@ -115,9 +154,22 @@
     <div class="projects-grid">
       <!-- Example project card -->
       <div class="project-card">
-        <img src="assets/dashboard1.png" alt="Project 1 screenshot">
+        <div class="carousel">
+        <div class="carousel-inner">
+          <img src="assets/dashboard1.png" alt="Project 1 screenshot 1">
+          <img src="assets/dashboard2.png" alt="Project 1 screenshot 2">
+          <img src="assets/dashboard3.png" alt="Project 1 screenshot 3">
+        </div>
+        <button class="carousel-control prev">‹</button>
+         <button class="carousel-control next">›</button>
+         </div>
         <h3>Sales Dashboard</h3>
-        <p>Interactive Tableau dashboard that reduced reporting time by 30%.</p>
+        <p>Interactive Tableau dashboard that reduced traffic accidents in Chicago by 30%.</p>
+      </div>
+      <div class="project-card">
+        <img src="assets/story1.png" alt="Project 2 screenshot">
+        <h3>Demand Forecasting</h3>
+        <p>Comprehensive EDA analysis on extensive Sales data of a Asian Wholesale food supplier.</p>
       </div>
       <!-- Add more cards similarly -->
     </div>
@@ -140,6 +192,24 @@
       document.getElementById('site-header')
         .classList.toggle('scrolled', window.scrollY > 50);
     });
+    document.querySelectorAll('.carousel').forEach(carousel => {
+    const inner = carousel.querySelector('.carousel-inner');
+    const slides = inner.children;
+    let idx = 0;
+
+    carousel.querySelector('.next')
+      .addEventListener('click', () => {
+        idx = (idx + 1) % slides.length;
+        inner.style.transform = `translateX(-${idx * 100}%)`;
+      });
+
+    carousel.querySelector('.prev')
+      .addEventListener('click', () => {
+        idx = (idx - 1 + slides.length) % slides.length;
+        inner.style.transform = `translateX(-${idx * 100}%)`;
+      });
+  });
+</script>
   </script>
 </body>
 </html>
