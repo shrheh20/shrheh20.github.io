@@ -40,13 +40,72 @@
 
     /* —— Skills Grid —— */
     .skills-grid {
-      display: grid; grid-template-columns: repeat(auto-fit,minmax(120px,1fr)); gap: 1rem;
+      display: grid; 
+      align-items:center; 
+      justify-content:center;
+      grid-template-columns: 
+      repeat(auto-fit, minmax(140px, 1fr));
+      gap: 1rem;
     }
     .skill {
-      border: 1px solid #ddd; border-radius: 4px; padding: 0.75rem;
-      text-align: center; font-weight: 500;
+      flex:0 0 auto;
+      border: 1px solid #ddd; 
+      border-radius: 4px; 
+      padding: 0.75rem;
+      justify-content: center;      /* center vertically (if fixed height) */
+      align-items: center;
+      text-align: center; 
+      font-weight: 500; 
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    .skill-icon {
+      width: 40px;              /* adjust as you like */
+      height: 40px;
+      display: block;               /* make margin:auto work */
+      margin: 0 auto;      
+      object-fit: contain;
     }
 
+    /* —— Résumé Hover Preview —— */
+    .resume-link-wrapper {
+      position: relative;
+      display: inline-block;
+    }
+    .resume-preview {
+      position: absolute;
+      top: calc(100% + 0.5rem);
+      left: 0;
+      width: 300px;
+      padding: 0.25rem;
+      background: #fff;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      
+      /* start hidden */
+      opacity: 0;
+      transform: translateY(10px);
+      transition: opacity 0.2s ease, transform 0.2s ease;
+      pointer-events: none;
+    }
+    .resume-link-wrapper:hover .resume-preview {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: auto;
+    }
+    .resume-preview img {
+      display: block;
+      width: 100%;
+      height: auto;
+      border-radius: 4px;
+    }
+
+    /* show on hover */
+    .resume-link-wrapper:hover .resume-preview {
+      visibility: visible;
+      opacity: 1;
+      transform: translateY(0);
+    }
     /* —— Projects Cards —— */
     .projects-grid {
       display: flex; 
@@ -71,7 +130,7 @@
   position: relative;
   overflow: hidden;
   width: 100%;
-  height: 200px;         /* adjust height as needed */
+  height: 600px;         /* adjust height as needed */
   border-radius: 6px 6px 0 0; /* match project-card */
 }
 .carousel-inner {
@@ -103,6 +162,16 @@
     /* —— Contact —— */
     #contact ul { list-style: none; display: flex; gap: 1rem; margin-top: 1rem; }
     #contact li a { font-weight: 500; }
+        .highlights {
+      /* push the bullets in so they start under the heading text, not the emoji */
+      padding-left: 1.5rem;
+      margin-top: 0.5rem;     /* small breathing room above */
+      list-style-position: outside;
+    }
+
+    .highlights li {
+      margin-bottom: 0.5rem;  /* optional spacing between items */
+    }
   </style>
 </head>
 <body>
@@ -121,7 +190,7 @@
   <section id="hero">
     <div>
       <h1>Hi — I’m <span style="color:#007ACC">Shreyas Udupa</span></h1>
-      <p>Data Analyst │ Python · SQL · Tableau</p>
+      <p>Data Analyst │ Business Analyst | Python · SQL · Tableau</p>
       <a href="#projects" class="btn">View Projects</a>
     </div>
   </section>
@@ -129,25 +198,86 @@
   <!-- ABOUT -->
   <section id="about">
     <h2>About</h2>
-    <p>I’m a data enthusiast with a passion for turning raw numbers into actionable insights. Currently graduating with an MS in Information Management from UIUC, I’ve helped clients optimize workflows, improve decision-making, and drive growth through data visualization and predictive modeling.</p>
-    <p><a href="/Users/shrheh/Documents/shrheh20.github.io/ShreyasUdupa_2025_resume.pdf" download>Download Résumé (PDF)</a></p>
+   <!-- Intro paragraph -->
+  <p>
+    I’m a data enthusiast with a passion for turning raw numbers into actionable insights.  
+    I transform raw data into game-changing strategies—designing rock-solid ETL pipelines, deploying cutting-edge predictive models,
+    and crafting interactive dashboards that empower teams to make bold, data-driven moves.
+  </p>
+
+  <!-- Highlights sub-heading -->
+  <h3>🏆 Standout Wins</h3>
+
+  <!-- Bullet list of wins -->
+  <ul class="highlights">
+    <li>Boosted data reliability by <strong>20%</strong>  and data integrity by <strong>15%</strong> through overhauling Salesforce workflows and automating ETL for 10K+ records.</li>
+    <li>Accelerated KPI reporting by <strong>40%</strong> with 15+ tailor-made Tableau dashboards that illuminate performance at a glance.</li>
+    <li>Lifted predictive accuracy by <strong>15%</strong> through advanced statistical analysis on 500K+ crash records, pinpointing high-risk zones for targeted action.</li>
+    <li>Secured <strong>$50K</strong> in funding (and authored a successful $150K proposal) by developing a data-driven ELDA curriculum and benchmarking leading incubators.</li>
+  </ul>
+
+  <!-- Closing sentence -->
+  <p>
+    With a flair for turning complexity into clarity, I deliver insights that spark innovation, drive efficiency, and fuel growth.
+  </p>
+
+      <span class="resume-link-wrapper">
+        <a href="/Users/shrheh/Documents/shrheh20.github.io/ShreyasUdupa_2025_resume.pdf" download class="resume-link">Download Resume (PDF)</a>
+        <div class="resume-preview">
+          <img src="assets/resume-preview.png" alt="Preview of resume">
+        </div>
+
+      </span>
   </section>
 
   <!-- SKILLS -->
   <section id="skills">
     <h2>Skills</h2>
     <div class="skills-grid">
-      <div class="skill">Python</div>
-      <div class="skill">SQL</div>
-      <div class="skill">Tableau</div>
-      <div class="skill">Excel</div>
-      <div class="skill">Power BI</div>
-      <div class="skill">AWS</div>
-      <div class="skill">GCP</div>
-      <div class="skill">Business Analysis</div> 
-      <div class="skill">Data Visualization</div>
-      <div class="skill">Statistics</div>
-      <div class="skill">Vibe Coding</div>
+      <div class="skill">
+        <img src="assets/icons/python.png" alt="Python logo" class="skill-icon">
+        <span>Python</span> 
+      </div>
+      <div class="skill">
+        <img src="assets/icons/sql.png" alt="SQL logo" class="skill-icon">
+        <span>SQL</span>
+      </div>
+      <div class="skill">
+        <img src="assets/icons/tableau.png" alt="Tableau logo" class="skill-icon">
+        <span>Teableau</span>
+      </div>
+      <div class="skill">
+        <img src="assets/icons/excel.png" alt="Excel logo" class="skill-icon">
+        <span>Microsoft Excel</span>
+      </div>
+      <div class="skill">
+        <img src="assets/icons/powerbi.png" alt="powerbi logo" class="skill-icon">
+        <span>Power BI</span>
+      </div>
+      <div class="skill">
+        <img src="assets/icons/aws.png" alt="aws logo" class="skill-icon">
+        <span>AWS</span>
+      </div>
+      <div class="skill">
+        <img src="assets/icons/gcp.png" alt="gcp logo" class="skill-icon">
+        <span>GCP</span>
+      </div>
+      <div class="skill">
+        <img src="assets/icons/ba.png" alt="balogo" class="skill-icon">
+        <span>Business Analysis</span>
+      </div> 
+      <div class="skill">
+        <img src="assets/icons/dv.png" alt="dv logo" class="skill-icon">
+        <span>Data Visualization</span>
+      </div>
+      <div class="skill">
+        <img src="assets/icons/statistics.png" alt="stats logo" class="skill-icon">
+        <span>Statistics</span>
+      </div>
+      <div class="skill">
+        <img src="assets/icons/vc.png" alt="vc logo" class="skill-icon">
+        <span>Vibe Coding</span>
+        </div>
     </div>
   </section>
 
@@ -171,7 +301,15 @@
       </div>
       
       <div class="project-card">
-        <img src="assets/story1.png" alt="Project 2 screenshot">
+        <div class="carousel">
+          <div class="carousel-inner">
+            <img src="assets/story1.png" alt="Project 2 screenshot 1">
+            <img src="assets/story2.png" alt="Project 2 screenshot 2">
+            <img src="assets/story3.png" alt="Project 2 screenshot 3">
+          </div>
+          <button class="carousel-control prev">‹</button>
+           <button class="carousel-control next">›</button>
+           </div>
         <h3>Demand Forecasting</h3>
         <p>Comprehensive EDA analysis on extensive Sales data of a Asian Wholesale food supplier.</p>
       </div>
@@ -184,7 +322,8 @@
     <h2>Contact</h2>
     <p>Let’s build something together—reach out!</p>
     <ul>
-      <li><a href="shreyas.udupa20@gmail.com">Email</a></li>
+      <li>Phone Number : +1 (447)-902-5746 </li>
+      <li><a href="mailto:shreyas.udupa20@gmail.com">shreyas.udupa20@gmail.com</a></li>
       <li><a href="https://linkedin.com/in/shreyasudupa/" target="_blank">LinkedIn</a></li>
       <li><a href="https://github.com/shrheh20" target="_blank">GitHub</a></li>
     </ul>
@@ -212,8 +351,13 @@
         idx = (idx - 1 + slides.length) % slides.length;
         inner.style.transform = `translateX(-${idx * 100}%)`;
       });
+    });
+      const hero = document.getElementById('hero');
+    window.addEventListener('scroll', () => {
+      // change the 0 to something higher (e.g. 200) 
+      // if you only want it to flip after you scroll further
+      hero.classList.toggle('scrolled', window.scrollY > 0);
   });
-</script>
   </script>
 </body>
 </html>
