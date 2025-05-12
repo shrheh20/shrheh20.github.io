@@ -8,7 +8,7 @@
     /* —— Reset & Base —— */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     html { scroll-behavior: smooth; font-family: system-ui, sans-serif; }
-    body { color: #111; background: #fff; line-height: 1.6; }
+    body { color: #111; background: #fff; line-height: 1.6;}
     a { color: #007ACC; text-decoration: none; }
     a:hover { text-decoration: underline; }
 
@@ -19,6 +19,7 @@
       display: flex; justify-content: space-between; align-items: center;
       background: transparent;
       transition: background 0.3s, box-shadow 0.3s;
+      z-index: 1000; 
     }
     header.scrolled {
       background: #fff;
@@ -28,8 +29,9 @@
 
     /* —— Sections —— */
     section {
-      max-width: 800px; margin: 0 auto;
+      max-width: 1000px; margin: 0 auto;
       padding: 6rem 2rem;
+      scroll-margin-top: 80px;
     }
     #hero { display: flex; align-items: center; justify-content: center; height: 100vh; }
     #hero h1 { font-size: 3rem; margin-bottom: 1rem; }
@@ -130,7 +132,7 @@
   position: relative;
   overflow: hidden;
   width: 100%;
-  height: 600px;         /* adjust height as needed */
+  height: 100%;         /* adjust height as needed */
   border-radius: 6px 6px 0 0; /* match project-card */
 }
 .carousel-inner {
@@ -285,6 +287,14 @@
   <section id="projects">
     <h2>Projects</h2>
     <div class="projects-grid">
+    <div class="project-card">
+      <div class="carousel">
+        <h3>Demand Forecasting Sales Analysis</h3>
+         <p>Tableau Dashboard built for a leading Asian wholesale food supplier, analyzing historical sales data from 2018 to 2024. This dashboard identifies sales patterns, seasonal trends, and year-over-year performance across product categories and regions. Designed to support data-driven decision-making in supply chain and sales strategy.</p>
+        <div class='tableauPlaceholder' id='viz1747066335899' style='position: relative'><noscript><a href='#'><img alt='Demand Forecasting Sales Analysis 2018-2024 ' src='https:&#47;&#47;public.tableau.com&#47;static&#47;images&#47;De&#47;DemandForecastingSalesAnalysis2018-2024&#47;Story1&#47;1_rss.png' style='border: none' /></a></noscript><object class='tableauViz'  style='display:none;'><param name='host_url' value='https%3A%2F%2Fpublic.tableau.com%2F' /> <param name='embed_code_version' value='3' /> <param name='site_root' value='' /><param name='name' value='DemandForecastingSalesAnalysis2018-2024&#47;Story1' /><param name='tabs' value='no' /><param name='toolbar' value='yes' /><param name='static_image' value='https:&#47;&#47;public.tableau.com&#47;static&#47;images&#47;De&#47;DemandForecastingSalesAnalysis2018-2024&#47;Story1&#47;1.png' /> <param name='animate_transition' value='yes' /><param name='display_static_image' value='yes' /><param name='display_spinner' value='yes' /><param name='display_overlay' value='yes' /><param name='display_count' value='yes' /><param name='language' value='en-US' /></object></div>                <script type='text/javascript'>                    var divElement = document.getElementById('viz1747066335899');                    var vizElement = divElement.getElementsByTagName('object')[0];                    vizElement.style.width='100%';vizElement.style.height=(divElement.offsetWidth*0.75)+'px';                    var scriptElement = document.createElement('script');                    scriptElement.src = 'https://public.tableau.com/javascripts/api/viz_v1.js';                    vizElement.parentNode.insertBefore(scriptElement, vizElement);                </script>
+    </div>
+  </div>
+  
       <!-- Example project card -->
       <div class="project-card">
         <div class="carousel">
@@ -296,25 +306,10 @@
         <button class="carousel-control prev">‹</button>
          <button class="carousel-control next">›</button>
          </div>
-        <h3>Sales Dashboard</h3>
+       
         <p>Interactive Tableau dashboard that reduced traffic accidents in Chicago by 30%.</p>
       </div>
-      
-      <div class="project-card">
-        <div class="carousel">
-          <div class="carousel-inner">
-            <img src="assets/story1.png" alt="Project 2 screenshot 1">
-            <img src="assets/story2.png" alt="Project 2 screenshot 2">
-            <img src="assets/story3.png" alt="Project 2 screenshot 3">
-          </div>
-          <button class="carousel-control prev">‹</button>
-           <button class="carousel-control next">›</button>
-           </div>
-        <h3>Demand Forecasting</h3>
-        <p>Comprehensive EDA analysis on extensive Sales data of a Asian Wholesale food supplier.</p>
-      </div>
-      <!-- Add more cards similarly -->
-    </div>
+  </div>
   </section>
 
   <!-- CONTACT -->
@@ -323,7 +318,7 @@
     <p>Let’s build something together—reach out!</p>
     <ul>
       <li>Phone Number : +1 (447)-902-5746 </li>
-      <li><a href="mailto:shreyas.udupa20@gmail.com">shreyas.udupa20@gmail.com</a></li>
+      <li><a href="mailto:shreyas.udupa20@gmail.com">udupa3@illinois.edu</a></li>
       <li><a href="https://linkedin.com/in/shreyasudupa/" target="_blank">LinkedIn</a></li>
       <li><a href="https://github.com/shrheh20" target="_blank">GitHub</a></li>
     </ul>
