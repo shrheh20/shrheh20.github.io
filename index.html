@@ -8,7 +8,7 @@
     /* —— Reset & Base —— */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     html { scroll-behavior: smooth; font-family: system-ui, sans-serif; }
-    body { color: #111; background: #fff; line-height: 1.6;}
+    body { color: #111; background: #f9f9f9; line-height: 1.6; }
     a { color: #007ACC; text-decoration: none; }
     a:hover { text-decoration: underline; }
 
@@ -17,13 +17,14 @@
       position: fixed; top: 0; left: 0; width: 100%;
       padding: 1rem 2rem;
       display: flex; justify-content: space-between; align-items: center;
-      background: transparent;
+      background: #ffffff;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.08);
       transition: background 0.3s, box-shadow 0.3s;
       z-index: 1000; 
     }
     header.scrolled {
-      background: #fff;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      background: #ffffff;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
     }
     nav a { margin-left: 1rem; font-weight: 500; }
 
@@ -174,6 +175,14 @@
     .highlights li {
       margin-bottom: 0.5rem;  /* optional spacing between items */
     }
+  .content-wrapper {
+    background: #fff;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    margin: 2rem auto;
+    padding: 2rem;
+    max-width: 1000px;
+  }
   </style>
 </head>
 <body>
@@ -188,11 +197,14 @@
     </nav>
   </header>
 
+  <div class="content-wrapper">
   <!-- HERO -->
   <section id="hero">
     <div>
       <h1>Hi — I’m <span style="color:rgb(127, 214, 124)">Shreyas Udupa</span></h1>
-      <p>Data Analyst · Business Analyst | Python · SQL · Tableau</p>
+      <p> Data Analyst | Business Intelligence | Phi Kappa Phi Honoree (Top 10%)
+        SQL • Python • Tableau | MSIM @ UIUC | Data-Driven Strategy & Predictive Analytics
+      </p>
       <a href="#projects" class="btn">View Projects</a>
     </div>
   </section>
@@ -202,9 +214,7 @@
     <h2>About</h2>
    <!-- Intro paragraph -->
   <p>
-    I’m a data enthusiast with a passion for turning raw numbers into actionable insights.  
-    I transform raw data into game-changing strategies—designing rock-solid ETL pipelines, deploying cutting-edge predictive models,
-    and crafting interactive dashboards that empower teams to make bold, data-driven moves.
+    I’m Shreyas Udupa, a data analyst and business intelligence engineer passionate about transforming complex data into clear, actionable insights. With 2+ years of experience across startups, academia, and global firms, I’ve built scalable ETL pipelines, optimized CRM systems, and crafted forecasting models that unlocked over $120K in savings and helped raise $50K in funding. I’m certified in AWS and Google Cloud, fluent in SQL, Python, Tableau, and well-versed in cloud platforms including AWS, Azure, and GCP. Whether forecasting demand or enhancing dashboards, I focus on data storytelling that drives decisions and outcomes.
   </p>
 
   <!-- Highlights sub-heading -->
@@ -212,10 +222,11 @@
 
   <!-- Bullet list of wins -->
   <ul class="highlights">
-    <li>Boosted data reliability by <strong>20%</strong>  and data integrity by <strong>15%</strong> through overhauling Salesforce workflows and automating ETL for 10K+ records.</li>
-    <li>Accelerated KPI reporting by <strong>40%</strong> with 15+ tailor-made Tableau dashboards that illuminate performance at a glance.</li>
-    <li>Lifted predictive accuracy by <strong>15%</strong> through advanced statistical analysis on 500K+ crash records, pinpointing high-risk zones for targeted action.</li>
-    <li>Secured <strong>$50K</strong> in funding (and authored a successful $150K proposal) by developing a data-driven ELDA curriculum and benchmarking leading incubators.</li>
+    <li><strong>Engineered a resilient Amazon Glue ETL pipeline</strong> to migrate Salesforce CRM data to Amazon RDS, <strong>improving data reliability and query performance by 40%</strong>, while achieving 99.9% system uptime.
+    <li><strong>Unlocked $120K in working capital </strong> and improved inventory turnover by 15% by identifying seasonal demand patterns from 10 years of SKU-level sales data using Snowflake.</li>
+    <li>Developed 15+ interactive Tableau dashboards and KPI trackers for 100+ startups, <strong>operational visibility and accelerating data-driven decisions by 20%</strong> at EnterpriseWorks.</li>
+    <li>Influenced 5+ strategic cloud deals by leading 8 joint solution workshops with Google teams, directly <strong>contributing to 40% of regional Q1 revenue</strong> at Quantiphi.</li>
+    <li><strong>Boosted fraud detection accuracy by 20%</strong> and reduced investigation time by 30% by designing risk-focused data pipelines and 16 real-time dashboards for high-volume financial transactions.</li>
   </ul>
 
   <!-- Closing sentence -->
@@ -323,6 +334,7 @@
       <li><a href="https://github.com/shrheh20" target="_blank">GitHub</a></li>
     </ul>
   </section>
+  </div>
 
   <script>
     // Header background on scroll
@@ -356,4 +368,3 @@
   </script>
 </body>
 </html>
-
