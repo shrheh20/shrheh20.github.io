@@ -3,368 +3,585 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Shreyas Udupa – Data Analyst</title>
+  <title>Shreyas Udupa — Data & BI Engineer</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
   <style>
-    /* —— Reset & Base —— */
+    :root {
+      --ink:      #0d0d0d;
+      --ink-mid:  #3a3a3a;
+      --ink-soft: #717171;
+      --paper:    #f7f5f1;
+      --paper-2:  #eeeae3;
+      --accent:   #c8392b;
+      --rule:     rgba(13,13,13,0.1);
+      --serif:    'DM Serif Display', Georgia, serif;
+      --sans:     'DM Sans', system-ui, sans-serif;
+      --mono:     'JetBrains Mono', monospace;
+    }
+
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    html { scroll-behavior: smooth; font-family: system-ui, sans-serif; }
-    body { color: #111; background: #f9f9f9; line-height: 1.6; }
-    a { color: #007ACC; text-decoration: none; }
-    a:hover { text-decoration: underline; }
+    html { scroll-behavior: smooth; }
+    body { font-family: var(--sans); background: var(--paper); color: var(--ink); line-height: 1.65; overflow-x: hidden; }
+    a { color: inherit; text-decoration: none; }
 
-    /* —— Header —— */
-    header {
-      position: fixed; top: 0; left: 0; width: 100%;
-      padding: 1rem 2rem;
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 0; left: 0; width: 100%; z-index: 100;
+      padding: 1.25rem 3rem;
       display: flex; justify-content: space-between; align-items: center;
-      background: #ffffff;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.08);
-      transition: background 0.3s, box-shadow 0.3s;
-      z-index: 1000; 
+      border-bottom: 1px solid transparent;
+      transition: background 0.4s, border-color 0.4s;
     }
-    header.scrolled {
-      background: #ffffff;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-    }
-    nav a { margin-left: 1rem; font-weight: 500; }
+    nav.solid { background: var(--paper); border-color: var(--rule); }
+    .nav-logo { font-family: var(--serif); font-size: 1.15rem; }
+    .nav-links { display: flex; gap: 2.5rem; }
+    .nav-links a { font-size: 0.78rem; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-mid); transition: color 0.2s; }
+    .nav-links a:hover { color: var(--accent); }
 
-    /* —— Sections —— */
-    section {
-      max-width: 1000px; margin: 0 auto;
-      padding: 6rem 2rem;
-      scroll-margin-top: 80px;
-    }
-    #hero { display: flex; align-items: center; justify-content: center; height: 100vh; }
-    #hero h1 { font-size: 3rem; margin-bottom: 1rem; }
-    #hero p { font-size: 1.25rem; color: #555; }
-
-    h2 { font-size: 2rem; margin-bottom: 1rem; }
-    .btn { display: inline-block; margin-top: 1.5rem; padding: 0.75rem 1.5rem; border: 2px solid #007ACC; border-radius: 4px; font-weight: 600; }
-
-    /* —— Skills Grid —— */
-    .skills-grid {
-      display: grid; 
-      align-items:center; 
-      justify-content:center;
-      grid-template-columns: 
-      repeat(auto-fit, minmax(140px, 1fr));
-      gap: 1rem;
-    }
-    .skill {
-      flex:0 0 auto;
-      border: 1px solid #ddd; 
-      border-radius: 4px; 
-      padding: 0.75rem;
-      justify-content: center;      /* center vertically (if fixed height) */
+    /* ── HERO ── */
+    #hero {
+      min-height: 100vh;
+      display: grid; grid-template-columns: 1fr 1fr;
       align-items: center;
-      text-align: center; 
-      font-weight: 500; 
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      padding: 0 3rem; gap: 4rem;
+      position: relative; overflow: hidden;
     }
-    .skill-icon {
-      width: 40px;              /* adjust as you like */
-      height: 40px;
-      display: block;               /* make margin:auto work */
-      margin: 0 auto;      
-      object-fit: contain;
+    #hero::after {
+      content: '∑';
+      position: absolute; right: -0.05em; bottom: -0.15em;
+      font-family: var(--serif); font-size: 42vw; color: var(--paper-2);
+      line-height: 1; pointer-events: none; z-index: 0; user-select: none;
     }
+    .hero-left { position: relative; z-index: 1; }
+    .hero-eyebrow {
+      font-family: var(--mono); font-size: 0.7rem; letter-spacing: 0.18em;
+      text-transform: uppercase; color: var(--accent); margin-bottom: 1.25rem;
+      opacity: 0; animation: fadeUp 0.6s 0.2s forwards;
+    }
+    .hero-name {
+      font-family: var(--serif); font-size: clamp(2.8rem, 5.5vw, 5rem);
+      line-height: 1.05; margin-bottom: 1.5rem;
+      opacity: 0; animation: fadeUp 0.6s 0.35s forwards;
+    }
+    .hero-name em { font-style: italic; color: var(--accent); }
+    .hero-sub {
+      font-size: 1rem; color: var(--ink-mid); max-width: 44ch;
+      margin-bottom: 2.5rem; font-weight: 300; line-height: 1.8;
+      opacity: 0; animation: fadeUp 0.6s 0.5s forwards;
+    }
+    .hero-sub strong { color: var(--ink); font-weight: 500; }
+    .hero-cta { display: flex; gap: 1rem; flex-wrap: wrap; opacity: 0; animation: fadeUp 0.6s 0.65s forwards; }
+    .btn-primary {
+      padding: 0.75rem 1.75rem; background: var(--ink); color: var(--paper);
+      font-size: 0.78rem; font-weight: 500; letter-spacing: 0.1em;
+      text-transform: uppercase; border-radius: 2px; transition: background 0.2s, transform 0.15s;
+    }
+    .btn-primary:hover { background: var(--accent); transform: translateY(-2px); }
+    .btn-secondary {
+      padding: 0.75rem 1.75rem; border: 1px solid var(--ink); color: var(--ink);
+      font-size: 0.78rem; font-weight: 500; letter-spacing: 0.1em;
+      text-transform: uppercase; border-radius: 2px; transition: background 0.2s, color 0.2s, transform 0.15s;
+    }
+    .btn-secondary:hover { background: var(--ink); color: var(--paper); transform: translateY(-2px); }
 
-    /* —— Résumé Hover Preview —— */
-    .resume-link-wrapper {
-      position: relative;
-      display: inline-block;
-      z-index: 10;
+    .hero-right {
+      position: relative; z-index: 1;
+      display: flex; flex-direction: column; gap: 1.25rem;
+      opacity: 0; animation: fadeUp 0.6s 0.8s forwards;
     }
-    .resume-preview {
-      position: absolute;
-      top: calc(100% + 0.5rem);
-      left: 0;
-      width: 300px;
-      padding: 0.25rem;
-      background: #fff;
-      border: 1px solid #ddd;
-      border-radius: 4px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-      
-      /* start hidden */
-      opacity: 0;
-      transform: translateY(10px);
-      transition: opacity 0.2s ease, transform 0.2s ease;
-      pointer-events: none;
+    .stat-card {
+      border: 1px solid var(--rule); border-left: 3px solid var(--accent);
+      padding: 1.25rem 1.5rem; background: rgba(255,255,255,0.6);
     }
-    .resume-link-wrapper:hover .resume-preview {
-      opacity: 1;
-      transform: translateY(0);
-      pointer-events: auto;
-    }
-    .resume-preview img {
-      display: block;
-      width: 100%;
-      height: auto;
-      border-radius: 4px;
-    }
+    .stat-number { font-family: var(--serif); font-size: 2.5rem; line-height: 1; margin-bottom: 0.3rem; }
+    .stat-label { font-size: 0.76rem; color: var(--ink-soft); letter-spacing: 0.06em; text-transform: uppercase; }
 
-    /* show on hover */
-    .resume-link-wrapper:hover .resume-preview {
-      visibility: visible;
-      opacity: 1;
-      transform: translateY(0);
-    }
-    /* —— Projects Cards —— */
-    .projects-grid {
-      display: flex; 
-      flex-direction: column;
-      gap: 1.5rem;
-    }
-    .project-card {
-      border: 1px solid #eee; border-radius: 6px; overflow: hidden;
-      transition: transform 0.2s, box-shadow 0.2s;
-      width: 100%;
-    }
-    .project-card:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-    }
-    .project-card img { width: 100%; display: block; }
-    .project-card h3 { padding: 1rem; font-size: 1.1rem; }
-    .project-card p { padding: 0 1rem 1rem; color: #555; }
+    /* ── SECTION BASE ── */
+    .page-section { max-width: 1100px; margin: 0 auto; padding: 7rem 3rem; }
+    .page-section + .page-section, #about { border-top: 1px solid var(--rule); }
 
-    /* —— Carousel Base —— */
-.carousel {
-  position: relative;
-  overflow: hidden;
-  width: 100%;
-  height: 100%;         /* adjust height as needed */
-  border-radius: 6px 6px 0 0; /* match project-card */
-}
-.carousel-inner {
-  display: flex;
-  transition: transform 0.3s ease;
-  height: 100%;
-}
-.carousel-inner img {
-  flex: 0 0 100%;
-  object-fit: cover;
-  height: 100%;
-}
-
-/* —— Controls —— */
-.carousel-control {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  background: rgba(255,255,255,0.8);
-  border: none;
-  padding: 0.25rem 0.5rem;
-  font-size: 1.5rem;
-  cursor: pointer;
-  border-radius: 4px;
-}
-.carousel-control.prev { left: 0.5rem; }
-.carousel-control.next { right: 0.5rem; }
-
-    /* —— Contact —— */
-    #contact ul { list-style: none; display: flex; gap: 1rem; margin-top: 1rem; }
-    #contact li a { font-weight: 500; }
-        .highlights {
-      /* push the bullets in so they start under the heading text, not the emoji */
-      padding-left: 1.5rem;
-      margin-top: 0.5rem;     /* small breathing room above */
-      list-style-position: outside;
+    .section-label {
+      font-family: var(--mono); font-size: 0.68rem; letter-spacing: 0.2em;
+      text-transform: uppercase; color: var(--accent); margin-bottom: 1rem;
+      display: flex; align-items: center; gap: 0.75rem;
     }
+    .section-label::after { content: ''; display: block; height: 1px; width: 36px; background: var(--accent); opacity: 0.5; }
+    .section-title { font-family: var(--serif); font-size: clamp(1.9rem, 3.5vw, 2.8rem); line-height: 1.1; margin-bottom: 3rem; }
 
-    .highlights li {
-      margin-bottom: 0.5rem;  /* optional spacing between items */
+    /* ── ABOUT ── */
+    .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: start; }
+    .about-story p { font-size: 1rem; color: var(--ink-mid); margin-bottom: 1.25rem; font-weight: 300; line-height: 1.8; }
+    .about-story p strong { color: var(--ink); font-weight: 500; }
+    .origin-block {
+      border-left: 3px solid var(--accent); padding: 1.25rem 1.5rem;
+      background: rgba(200,57,43,0.04); margin-top: 2rem;
+      font-style: italic; font-family: var(--serif); font-size: 1.05rem;
+      color: var(--ink-mid); line-height: 1.65;
     }
-  .content-wrapper {
-    background: #fff;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    border-radius: 8px;
-    margin: 2rem auto;
-    padding: 2rem;
-    max-width: 1000px;
-  }
+    .about-wins h3 { font-family: var(--serif); font-size: 1.35rem; margin-bottom: 1.5rem; }
+    .win-item { display: flex; gap: 1rem; margin-bottom: 1.4rem; padding-bottom: 1.4rem; border-bottom: 1px solid var(--rule); }
+    .win-item:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+    .win-num { font-family: var(--mono); font-size: 0.62rem; color: var(--accent); font-weight: 500; min-width: 2rem; padding-top: 0.15rem; letter-spacing: 0.05em; }
+    .win-text { font-size: 0.88rem; color: var(--ink-mid); line-height: 1.65; }
+    .win-text strong { color: var(--ink); font-weight: 500; }
+
+    /* ── PROJECTS ── */
+    .projects-list { display: flex; flex-direction: column; gap: 0; }
+    .project-entry {
+      display: grid; grid-template-columns: 1fr 1.8fr;
+      gap: 3.5rem; align-items: start;
+      padding: 4rem 0; border-bottom: 1px solid var(--rule);
+    }
+    .project-entry:first-child { padding-top: 0; }
+    .project-entry:last-child { border-bottom: none; }
+    .project-meta { position: sticky; top: 100px; }
+    .project-tag { font-family: var(--mono); font-size: 0.63rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.75rem; }
+    .project-title { font-family: var(--serif); font-size: 1.65rem; line-height: 1.2; margin-bottom: 1rem; }
+    .project-desc { font-size: 0.88rem; color: var(--ink-mid); line-height: 1.75; margin-bottom: 1.5rem; font-weight: 300; }
+    .project-impact { background: var(--paper-2); padding: 1rem 1.25rem; border-radius: 2px; margin-bottom: 1.5rem; }
+    .impact-label { font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--ink-soft); margin-bottom: 0.35rem; }
+    .impact-value { font-family: var(--serif); font-size: 1.15rem; color: var(--ink); line-height: 1.4; }
+    .project-tools { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+    .tool-tag { font-family: var(--mono); font-size: 0.62rem; padding: 0.28rem 0.6rem; border: 1px solid var(--rule); color: var(--ink-soft); letter-spacing: 0.04em; }
+    .project-visual { border: 1px solid var(--rule); border-radius: 2px; overflow: hidden; background: #fff; }
+
+    /* confidential */
+    .confidential-wrap {
+      position: relative; min-height: 300px; overflow: hidden;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .confidential-wrap img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; filter: blur(7px) brightness(0.85); }
+    .confidential-badge { position: relative; z-index: 1; text-align: center; }
+    .confidential-badge span {
+      display: inline-block; font-family: var(--mono); font-size: 0.68rem;
+      letter-spacing: 0.15em; text-transform: uppercase;
+      background: var(--ink); color: var(--paper); padding: 0.5rem 1.25rem; margin-bottom: 0.75rem;
+    }
+    .confidential-badge p { font-size: 0.82rem; color: #fff; opacity: 0.85; }
+
+    /* ── SKILLS ── */
+    .skills-groups { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2.5rem; }
+    .skill-group h3 { font-family: var(--mono); font-size: 0.65rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--ink-soft); margin-bottom: 1.25rem; padding-bottom: 0.75rem; border-bottom: 1px solid var(--rule); }
+    .skill-list { display: flex; flex-direction: column; gap: 0.6rem; }
+    .skill-item { font-size: 0.88rem; color: var(--ink-mid); display: flex; align-items: center; gap: 0.6rem; }
+    .skill-item::before { content: ''; width: 4px; height: 4px; background: var(--accent); border-radius: 50%; flex-shrink: 0; }
+
+    /* ── CONTACT ── */
+    #contact { text-align: center; }
+    .contact-sub { font-size: 1rem; color: var(--ink-mid); max-width: 50ch; margin: 0 auto 3rem; font-weight: 300; line-height: 1.8; }
+    .contact-links { display: flex; justify-content: center; gap: 3rem; flex-wrap: wrap; margin-bottom: 3rem; }
+    .contact-link { display: flex; flex-direction: column; gap: 0.25rem; align-items: center; }
+    .contact-link-label { font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--ink-soft); }
+    .contact-link-value { font-size: 0.92rem; color: var(--ink); font-weight: 500; transition: color 0.2s; }
+    .contact-link:hover .contact-link-value { color: var(--accent); }
+    .resume-row { display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap; }
+    .resume-btn { padding: 0.65rem 1.4rem; border: 1px solid var(--ink); font-size: 0.75rem; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; border-radius: 2px; transition: background 0.2s, color 0.2s; }
+    .resume-btn:hover { background: var(--ink); color: var(--paper); }
+
+    /* ── FOOTER ── */
+    footer { border-top: 1px solid var(--rule); padding: 2rem 3rem; display: flex; justify-content: space-between; align-items: center; max-width: 1100px; margin: 0 auto; font-size: 0.76rem; color: var(--ink-soft); }
+
+    /* ── ANIMATIONS ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(16px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .reveal { opacity: 0; transform: translateY(18px); transition: opacity 0.65s ease, transform 0.65s ease; }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      #hero { grid-template-columns: 1fr; padding: 8rem 1.5rem 4rem; min-height: auto; gap: 3rem; }
+      #hero::after { display: none; }
+      .hero-right { flex-direction: row; flex-wrap: wrap; }
+      .stat-card { flex: 1; min-width: 140px; }
+      .about-grid { grid-template-columns: 1fr; gap: 3rem; }
+      .project-entry { grid-template-columns: 1fr; gap: 2rem; }
+      .project-meta { position: static; }
+      .skills-groups { grid-template-columns: 1fr 1fr; }
+      .page-section { padding: 5rem 1.5rem; }
+      nav { padding: 1rem 1.5rem; }
+    }
+    @media (max-width: 600px) {
+      .skills-groups { grid-template-columns: 1fr; }
+      .nav-links { gap: 1.25rem; }
+      .contact-links { gap: 2rem; }
+    }
   </style>
 </head>
 <body>
-  <!-- HEADER -->
-  <header id="site-header">
-    <a href="ne.html">Shreyas Udupa</a>
-    <nav>
-      <a href="#about">About</a>
-      <a href="#skills">Skills</a>
-      <a href="#projects">Projects</a>
-      <a href="#contact">Contact</a>
-    </nav>
-  </header>
 
-  <div class="content-wrapper">
+  <!-- NAV -->
+  <nav id="site-nav">
+    <a href="#hero" class="nav-logo">Shreyas Udupa</a>
+    <div class="nav-links">
+      <a href="#about">About</a>
+      <a href="#projects">Work</a>
+      <a href="#skills">Skills</a>
+      <a href="#contact">Contact</a>
+    </div>
+  </nav>
+
   <!-- HERO -->
   <section id="hero">
-    <div>
-      <h1>Hi — I’m <span style="color:rgb(127, 214, 124)">Shreyas Udupa</span></h1>
-      <p> Data Analyst | Business Intelligence | Phi Kappa Phi Honoree (Top 10%)
-        SQL • Python • Tableau | MSIM @ UIUC | Data-Driven Strategy & Predictive Analytics
+    <div class="hero-left">
+      <p class="hero-eyebrow">Data & Business Intelligence Engineer</p>
+      <h1 class="hero-name">
+        Turning raw<br>signals into<br><em>decisions.</em>
+      </h1>
+      <p class="hero-sub">
+        From <strong>F1 telemetry</strong> to enterprise BI — I build the data infrastructure and dashboards that let teams move faster and see further. Currently at <strong>EnterpriseWorks, UIUC</strong>.
       </p>
-      <a href="#projects" class="btn">View Projects</a>
+      <div class="hero-cta">
+        <a href="#projects" class="btn-primary">View My Work</a>
+        <a href="#contact" class="btn-secondary">Get In Touch</a>
+      </div>
+    </div>
+    <div class="hero-right">
+      <div class="stat-card">
+        <div class="stat-number">$137M</div>
+        <div class="stat-label">Funding tracked for FAST Center companies</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number">26.9×</div>
+        <div class="stat-label">Growth in Illinois SBIR funding since 1984</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number">40 yrs</div>
+        <div class="stat-label">Of SBIR/STTR data analysed across 5 sources</div>
+      </div>
     </div>
   </section>
 
   <!-- ABOUT -->
-  <section id="about">
-    <h2>About</h2>
-   <!-- Intro paragraph -->
-  <p>
-    I’m Shreyas Udupa, a data analyst and business intelligence engineer passionate about transforming complex data into clear, actionable insights. With 2+ years of experience across startups, academia, and global firms, I’ve built scalable ETL pipelines, optimized CRM systems, and crafted forecasting models that unlocked over $120K in savings and helped raise $50K in funding. I’m certified in AWS and Google Cloud, fluent in SQL, Python, Tableau, and well-versed in cloud platforms including AWS, Azure, and GCP. Whether forecasting demand or enhancing dashboards, I focus on data storytelling that drives decisions and outcomes.
-  </p>
-
-  <!-- Highlights sub-heading -->
-  <h3>🏆 Standout Wins</h3>
-
-  <!-- Bullet list of wins -->
-  <ul class="highlights">
-    <li><strong>Engineered a resilient Amazon Glue ETL pipeline</strong> to migrate Salesforce CRM data to Amazon RDS, <strong>improving data reliability and query performance by 40%</strong>, while achieving 99.9% system uptime.
-    <li><strong>Unlocked $120K in working capital </strong> and improved inventory turnover by 15% by identifying seasonal demand patterns from 10 years of SKU-level sales data using Snowflake.</li>
-    <li>Developed 15+ interactive Tableau dashboards and KPI trackers for 100+ startups, <strong>operational visibility and accelerating data-driven decisions by 20%</strong> at EnterpriseWorks.</li>
-    <li>Influenced 5+ strategic cloud deals by leading 8 joint solution workshops with Google teams, directly <strong>contributing to 40% of regional Q1 revenue</strong> at Quantiphi.</li>
-    <li><strong>Boosted fraud detection accuracy by 20%</strong> and reduced investigation time by 30% by designing risk-focused data pipelines and 16 real-time dashboards for high-volume financial transactions.</li>
-  </ul>
-
-  <!-- Closing sentence -->
-  <p>
-    With a flair for turning complexity into clarity, I deliver insights that spark innovation, drive efficiency, and fuel growth.
-  </p>
-
-      <span class="resume-link-wrapper">
-        <a href="assets/ShreyasUdupa_Business_Intelligence_2025_resume.pdf" download target="_blank" class="resume-link">Download Resume (PDF)</a>
-        <div class="resume-preview">
-          <img src="assets/resume-preview.png" alt="Preview of resume">
+  <section id="about" class="page-section">
+    <div class="section-label">About</div>
+    <div class="about-grid">
+      <div class="about-story reveal">
+        <p>
+          I'm a <strong>data analyst and BI engineer</strong> with 2+ years of experience across startups, academia, and global consulting. I specialise in building ETL pipelines, BI dashboards, and forecasting models that drive real decisions — not just pretty charts.
+        </p>
+        <p>
+          My toolkit spans <strong>SQL, Python, Tableau, and AWS</strong> (Glue, RDS, Redshift, Athena). I'm AWS Solutions Architect and Google Cloud certified, and currently expanding into <strong>AI agent development</strong> to bridge the gap between BI and intelligent automation.
+        </p>
+        <p>
+          I grew up in India, earned my MSIM at UIUC with a 4.0, and outside of data I read Ashwin Sanghi and James Patterson. I don't stop until I understand how something works.
+        </p>
+        <div class="origin-block">
+          "I got into data watching Formula 1 — thousands of sensors, split-second pit decisions, predictive overtake models. That's when I realised data wasn't just numbers. It was the difference between winning and losing."
         </div>
-      </span>
-  </section>
-
-  <!-- SKILLS -->
-  <section id="skills">
-    <h2>Skills</h2>
-    <div class="skills-grid">
-      <div class="skill">
-        <img src="assets/icons/python.png" alt="Python logo" class="skill-icon">
-        <span>Python</span> 
       </div>
-      <div class="skill">
-        <img src="assets/icons/sql.png" alt="SQL logo" class="skill-icon">
-        <span>SQL</span>
-      </div>
-      <div class="skill">
-        <img src="assets/icons/tableau.png" alt="Tableau logo" class="skill-icon">
-        <span>Tableau</span>
-      </div>
-      <div class="skill">
-        <img src="assets/icons/excel.png" alt="Excel logo" class="skill-icon">
-        <span>Microsoft Excel</span>
-      </div>
-      <div class="skill">
-        <img src="assets/icons/powerbi.png" alt="powerbi logo" class="skill-icon">
-        <span>Power BI</span>
-      </div>
-      <div class="skill">
-        <img src="assets/icons/aws.png" alt="aws logo" class="skill-icon">
-        <span>AWS</span>
-      </div>
-      <div class="skill">
-        <img src="assets/icons/gcp.png" alt="gcp logo" class="skill-icon">
-        <span>GCP</span>
-      </div>
-      <div class="skill">
-        <img src="assets/icons/ba.png" alt="balogo" class="skill-icon">
-        <span>Business Analysis</span>
-      </div> 
-      <div class="skill">
-        <img src="assets/icons/dv.png" alt="dv logo" class="skill-icon">
-        <span>Data Visualization</span>
-      </div>
-      <div class="skill">
-        <img src="assets/icons/statistics.png" alt="stats logo" class="skill-icon">
-        <span>Statistics</span>
-      </div>
-      <div class="skill">
-        <img src="assets/icons/vc.png" alt="vc logo" class="skill-icon">
-        <span>Vibe Coding</span>
+      <div class="about-wins reveal">
+        <h3>Standout Impact</h3>
+        <div class="win-item">
+          <div class="win-num">01</div>
+          <div class="win-text"><strong>Secured state program extension</strong> for EnterpriseWorks as Illinois FAST Center by building dashboards across 5 data sources that quantified 40 years of SBIR/STTR impact.</div>
         </div>
+        <div class="win-item">
+          <div class="win-num">02</div>
+          <div class="win-text"><strong>$120K in working capital unlocked</strong> by identifying seasonal demand patterns from 10 years of SKU-level sales data using Snowflake and Python.</div>
+        </div>
+        <div class="win-item">
+          <div class="win-num">03</div>
+          <div class="win-text"><strong>40% faster query performance</strong> after migrating Salesforce CRM to Amazon RDS with 99.9% uptime via AWS Glue ETL pipelines.</div>
+        </div>
+        <div class="win-item">
+          <div class="win-num">04</div>
+          <div class="win-text"><strong>40% of regional Q1 revenue</strong> at Quantiphi attributed to a financial services deal closed through data-driven cloud strategy planning.</div>
+        </div>
+        <div class="win-item">
+          <div class="win-num">05</div>
+          <div class="win-text"><strong>20% improvement in fraud detection</strong> by building risk pipelines and 16 real-time dashboards across 10M+ transactions.</div>
+        </div>
+      </div>
     </div>
   </section>
 
   <!-- PROJECTS -->
-  <section id="projects">
-    <h2>Projects</h2>
-    <div class="projects-grid">
-    <div class="project-card">
-      <div class="carousel">
-        <h3>Demand Forecasting Sales Analysis</h3>
-         <p>Tableau Dashboard built for a leading Asian wholesale food supplier, analyzing historical sales data from 2018 to 2024. This dashboard identifies sales patterns, seasonal trends, and year-over-year performance across product categories and regions. Designed to support data-driven decision-making in supply chain and sales strategy.</p>
-        <div class='tableauPlaceholder' id='viz1747066335899' style='position: relative'><noscript><a href='#'><img alt='Demand Forecasting Sales Analysis 2018-2024 ' src='https:&#47;&#47;public.tableau.com&#47;static&#47;images&#47;De&#47;DemandForecastingSalesAnalysis2018-2024&#47;Story1&#47;1_rss.png' style='border: none' /></a></noscript><object class='tableauViz'  style='display:none;'><param name='host_url' value='https%3A%2F%2Fpublic.tableau.com%2F' /> <param name='embed_code_version' value='3' /> <param name='site_root' value='' /><param name='name' value='DemandForecastingSalesAnalysis2018-2024&#47;Story1' /><param name='tabs' value='no' /><param name='toolbar' value='yes' /><param name='static_image' value='https:&#47;&#47;public.tableau.com&#47;static&#47;images&#47;De&#47;DemandForecastingSalesAnalysis2018-2024&#47;Story1&#47;1.png' /> <param name='animate_transition' value='yes' /><param name='display_static_image' value='yes' /><param name='display_spinner' value='yes' /><param name='display_overlay' value='yes' /><param name='display_count' value='yes' /><param name='language' value='en-US' /></object></div>                <script type='text/javascript'>                    var divElement = document.getElementById('viz1747066335899');                    var vizElement = divElement.getElementsByTagName('object')[0];                    vizElement.style.width='100%';vizElement.style.height=(divElement.offsetWidth*0.75)+'px';                    var scriptElement = document.createElement('script');                    scriptElement.src = 'https://public.tableau.com/javascripts/api/viz_v1.js';                    vizElement.parentNode.insertBefore(scriptElement, vizElement);                </script>
-    </div>
-  </div>
-  
-      <!-- Example project card -->
-      <div class="project-card">
-        <div class="carousel">
-        <div class="carousel-inner">
-          <img src="assets/dashboard1.png" alt="Project 1 screenshot 1">
-          <img src="assets/dashboard2.png" alt="Project 1 screenshot 2">
-          <img src="assets/dashboard3.png" alt="Project 1 screenshot 3">
+  <section id="projects" class="page-section">
+    <div class="section-label">Selected Work</div>
+    <h2 class="section-title reveal">Projects that shipped<br>and <em style="font-style:italic;color:var(--accent)">actually mattered.</em></h2>
+
+    <div class="projects-list">
+
+      <!-- PROJECT 1: FAST Center -->
+      <div class="project-entry reveal">
+        <div class="project-meta">
+          <div class="project-tag">EnterpriseWorks · 2024–Present</div>
+          <h3 class="project-title">FAST Center & Illinois SBIR Performance</h3>
+          <p class="project-desc">
+            Built a multi-dashboard analytics suite across 5 data sources to measure the FAST Center's impact on Illinois SBIR/STTR funding over 40 years. These dashboards were presented to state stakeholders and directly contributed to securing EnterpriseWorks' extension as Illinois' FAST Center.
+          </p>
+          <div class="project-impact">
+            <div class="impact-label">Key outcome</div>
+            <div class="impact-value">$65.63M raised · 26.9× IL funding growth · Program extension secured</div>
+          </div>
+          <div class="project-tools">
+            <span class="tool-tag">Tableau</span>
+            <span class="tool-tag">Python</span>
+            <span class="tool-tag">Excel</span>
+            <span class="tool-tag">SBA Data</span>
+            <span class="tool-tag">Salesforce</span>
+          </div>
         </div>
-        <button class="carousel-control prev">‹</button>
-         <button class="carousel-control next">›</button>
-         </div>
-       
-        <p>Interactive Tableau dashboard that reduced traffic accidents in Chicago by 30%.</p>
+        <div class="project-visual">
+          <!-- REPLACE the param name value below with your actual Tableau Public URL path -->
+          <div class='tableauPlaceholder' id='viz_fast' style='position:relative'>
+            <noscript><a href='#'><img alt='FAST Center Dashboard' src='https://public.tableau.com/views/FASTCenterandIllinoisSBIRPerformance_17745644378850/FASTCenterandIllinoisSBIRPerformance?:language=en-US&:sid=&:redirect=auth&:display_count=n&:origin=viz_share_link' style='border:none'/></a></noscript>
+            <object class='tableauViz' style='display:none;'>
+              <param name='host_url' value='https://public.tableau.com/views/FASTCenterandIllinoisSBIRPerformance_17745644378850/FASTCenterandIllinoisSBIRPerformance?:language=en-US&:sid=&:redirect=auth&:display_count=n&:origin=viz_share_link'/>
+              <param name='embed_code_version' value='3'/>
+              <param name='site_root' value=''/>
+              <param name='name' value='FASTCenterandIllinoisSBIRPerformance/FASTCenterandIllinoisSBIRPerformance'/>
+              <param name='tabs' value='yes'/><param name='toolbar' value='yes'/>
+              <param name='animate_transition' value='yes'/><param name='display_static_image' value='yes'/>
+              <param name='display_spinner' value='yes'/><param name='display_overlay' value='yes'/>
+              <param name='display_count' value='yes'/><param name='language' value='en-US'/>
+            </object>
+          </div>
+          <script type='text/javascript'>
+            (function(){
+              var d=document.getElementById('viz_fast'),o=d.getElementsByTagName('object')[0];
+              o.style.width='100%'; o.style.height=(d.offsetWidth*0.75)+'px';
+              var s=document.createElement('script'); s.src='https://public.tableau.com/javascripts/api/viz_v1.js';
+              o.parentNode.insertBefore(s,o);
+            })();
+          </script>
+        </div>
       </div>
-  </div>
+
+      <!-- PROJECT 2: Founder & Funding -->
+      <div class="project-entry reveal">
+        <div class="project-meta">
+          <div class="project-tag">EnterpriseWorks · 2024–Present</div>
+          <h3 class="project-title">Founder & Funding Intelligence</h3>
+          <p class="project-desc">
+            Designed a dual-dashboard suite giving EnterpriseWorks leadership a complete picture of their startup ecosystem — who the founders are, where they come from, and how $1.6B in funding has flowed across industries and funding rounds since inception.
+          </p>
+          <div class="project-impact">
+            <div class="impact-label">Key outcome</div>
+            <div class="impact-value">605 founders profiled · $1.6B tracked · 353 EW companies</div>
+          </div>
+          <div class="project-tools">
+            <span class="tool-tag">Tableau</span>
+            <span class="tool-tag">Python</span>
+            <span class="tool-tag">Salesforce</span>
+            <span class="tool-tag">Excel</span>
+          </div>
+        </div>
+        <div class="project-visual">
+          <div class='tableauPlaceholder' id='viz_founder' style='position:relative'>
+            <noscript><a href='#'><img alt='Founder Dashboard' src='https://public.tableau.com/static/images/St/StartupFunding_17501922257560/StartupDashboardSuite/1_rss.png' style='border:none'/></a></noscript>
+            <object class='tableauViz' style='display:none;'>
+              <param name='host_url' value='https%3A%2F%2Fpublic.tableau.com%2F'/>
+              <param name='embed_code_version' value='3'/>
+              <param name='site_root' value=''/>
+              <param name='name' value='StartupFunding_17501922257560/StartupDashboardSuite'/>
+              <param name='tabs' value='no'/><param name='toolbar' value='yes'/>
+              <param name='animate_transition' value='yes'/><param name='display_static_image' value='yes'/>
+              <param name='display_spinner' value='yes'/><param name='display_overlay' value='yes'/>
+              <param name='display_count' value='yes'/><param name='language' value='en-US'/>
+            </object>
+          </div>
+          <script type='text/javascript'>
+            (function(){
+              var d=document.getElementById('viz_founder'),o=d.getElementsByTagName('object')[0];
+              o.style.width='100%'; o.style.height=(d.offsetWidth*0.75)+'px';
+              var s=document.createElement('script'); s.src='https://public.tableau.com/javascripts/api/viz_v1.js';
+              o.parentNode.insertBefore(s,o);
+            })();
+          </script>
+        </div>
+      </div>
+
+      <!-- PROJECT 3: EIR (confidential) -->
+      <div class="project-entry reveal">
+        <div class="project-meta">
+          <div class="project-tag">EnterpriseWorks · Confidential</div>
+          <h3 class="project-title">EIR Usage & ROI Analytics</h3>
+          <p class="project-desc">
+            Built an analytics dashboard measuring the ROI of EnterpriseWorks' Entrepreneur-in-Residence program — correlating EIR spend with startup funding raised, tracking mentor utilisation across 15 EIRs, and visualising funding efficiency trends year-over-year.
+          </p>
+          <div class="project-impact">
+            <div class="impact-label">Key outcome</div>
+            <div class="impact-value">Positive EIR spend–funding ROI established across all 15 mentors</div>
+          </div>
+          <div class="project-tools">
+            <span class="tool-tag">Tableau</span>
+            <span class="tool-tag">Python</span>
+            <span class="tool-tag">Salesforce</span>
+            <span class="tool-tag">Excel</span>
+          </div>
+        </div>
+        <div class="project-visual">
+          <div class="confidential-wrap">
+            <img src="assets/EIR_Coverage.png" alt="EIR dashboard preview">
+            <div class="confidential-badge">
+              <span>Confidential</span>
+              <p>Full dashboard available on request</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PROJECT 4: Demand Forecasting -->
+      <div class="project-entry reveal">
+        <div class="project-meta">
+          <div class="project-tag">BI Group, UIUC · 2024</div>
+          <h3 class="project-title">Demand Forecasting & Sales Analysis</h3>
+          <p class="project-desc">
+            Analysed 10 years of SKU-level sales data for a leading Asian wholesale food supplier, building time-series forecasts incorporating CPI and fuel price indices. Identified seasonal demand patterns that unlocked $120K in working capital and cut overstock by 25%.
+          </p>
+          <div class="project-impact">
+            <div class="impact-label">Key outcome</div>
+            <div class="impact-value">$120K unlocked · 25% overstock cut · 15% inventory turnover gain</div>
+          </div>
+          <div class="project-tools">
+            <span class="tool-tag">Tableau</span>
+            <span class="tool-tag">Snowflake</span>
+            <span class="tool-tag">Python</span>
+            <span class="tool-tag">CPI / Fuel Index</span>
+          </div>
+        </div>
+        <div class="project-visual">
+          <div class='tableauPlaceholder' id='viz_demand' style='position:relative'>
+            <noscript><a href='#'><img alt='Demand Forecasting' src='https://public.tableau.com/static/images/De/DemandForecastingSalesAnalysis2018-2024/Story1/1_rss.png' style='border:none'/></a></noscript>
+            <object class='tableauViz' style='display:none;'>
+              <param name='host_url' value='https%3A%2F%2Fpublic.tableau.com%2F'/>
+              <param name='embed_code_version' value='3'/>
+              <param name='site_root' value=''/>
+              <param name='name' value='DemandForecastingSalesAnalysis2018-2024/Story1'/>
+              <param name='tabs' value='no'/><param name='toolbar' value='yes'/>
+              <param name='animate_transition' value='yes'/><param name='display_static_image' value='yes'/>
+              <param name='display_spinner' value='yes'/><param name='display_overlay' value='yes'/>
+              <param name='display_count' value='yes'/><param name='language' value='en-US'/>
+            </object>
+          </div>
+          <script type='text/javascript'>
+            (function(){
+              var d=document.getElementById('viz_demand'),o=d.getElementsByTagName('object')[0];
+              o.style.width='100%'; o.style.height=(d.offsetWidth*0.75)+'px';
+              var s=document.createElement('script'); s.src='https://public.tableau.com/javascripts/api/viz_v1.js';
+              o.parentNode.insertBefore(s,o);
+            })();
+          </script>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- SKILLS -->
+  <section id="skills" class="page-section">
+    <div class="section-label">Capabilities</div>
+    <h2 class="section-title reveal">The stack behind<br>the work.</h2>
+    <div class="skills-groups reveal">
+      <div class="skill-group">
+        <h3>Languages</h3>
+        <div class="skill-list">
+          <div class="skill-item">SQL</div>
+          <div class="skill-item">Python (pandas, NumPy, regex)</div>
+          <div class="skill-item">R</div>
+          <div class="skill-item">JavaScript</div>
+        </div>
+      </div>
+      <div class="skill-group">
+        <h3>BI & Visualisation</h3>
+        <div class="skill-list">
+          <div class="skill-item">Tableau</div>
+          <div class="skill-item">Power BI</div>
+          <div class="skill-item">AWS QuickSight</div>
+          <div class="skill-item">Excel (Power Query, VBA)</div>
+        </div>
+      </div>
+      <div class="skill-group">
+        <h3>Cloud & Data Infra</h3>
+        <div class="skill-list">
+          <div class="skill-item">AWS (Glue, RDS, Redshift, S3)</div>
+          <div class="skill-item">Snowflake</div>
+          <div class="skill-item">PostgreSQL · MySQL · MongoDB</div>
+          <div class="skill-item">Google Cloud Platform</div>
+        </div>
+      </div>
+      <div class="skill-group">
+        <h3>Data Engineering</h3>
+        <div class="skill-list">
+          <div class="skill-item">ETL Pipeline Design</div>
+          <div class="skill-item">Data Warehousing</div>
+          <div class="skill-item">Salesforce CRM</div>
+          <div class="skill-item">Schema Validation & Governance</div>
+        </div>
+      </div>
+      <div class="skill-group">
+        <h3>Analytics</h3>
+        <div class="skill-list">
+          <div class="skill-item">Time-Series Forecasting</div>
+          <div class="skill-item">Statistical Analysis</div>
+          <div class="skill-item">KPI Design & Reporting</div>
+          <div class="skill-item">Demand Planning</div>
+        </div>
+      </div>
+      <div class="skill-group">
+        <h3>Certifications</h3>
+        <div class="skill-list">
+          <div class="skill-item">AWS Solutions Architect – Associate</div>
+          <div class="skill-item">Google Cloud Associate Engineer</div>
+          <div class="skill-item">Phi Kappa Phi (Top 10%)</div>
+          <div class="skill-item">MSIM @ UIUC · GPA 4.0</div>
+        </div>
+      </div>
+    </div>
   </section>
 
   <!-- CONTACT -->
-  <section id="contact">
-    <h2>Contact</h2>
-    <p>Let’s build something together—reach out!</p>
-    <ul>
-      <li>Phone Number : +1 (447)-902-5746 </li>
-      <li><a href="mailto:shreyas.udupa20@gmail.com">udupa3@illinois.edu</a></li>
-      <li><a href="https://linkedin.com/in/shreyasudupa/" target="_blank">LinkedIn</a></li>
-      <li><a href="https://github.com/shrheh20" target="_blank">GitHub</a></li>
-    </ul>
+  <section id="contact" class="page-section">
+    <div class="section-label">Contact</div>
+    <h2 class="section-title reveal">Let's build something<br><em style="font-style:italic;color:var(--accent)">worth measuring.</em></h2>
+    <p class="contact-sub reveal">
+      Open to full-time roles in data analytics, BI engineering, and data engineering. If you're working on something interesting — especially at scale — I want to hear about it.
+    </p>
+    <div class="contact-links reveal">
+      <a href="mailto:shreyas.udupa20@gmail.com" class="contact-link">
+        <span class="contact-link-label">Email</span>
+        <span class="contact-link-value">shreyas.udupa20@gmail.com</span>
+      </a>
+      <a href="tel:+14479024746" class="contact-link">
+        <span class="contact-link-label">Phone</span>
+        <span class="contact-link-value">+1 (447) 902-4746</span>
+      </a>
+      <a href="https://linkedin.com/in/shreyasudupa/" target="_blank" class="contact-link">
+        <span class="contact-link-label">LinkedIn</span>
+        <span class="contact-link-value">shreyasudupa</span>
+      </a>
+      <a href="https://github.com/shrheh20" target="_blank" class="contact-link">
+        <span class="contact-link-label">GitHub</span>
+        <span class="contact-link-value">shrheh20</span>
+      </a>
+    </div>
+    <div class="resume-row reveal">
+      <a href="assets/ShreyasUdupa_2026_resume_Latest.pdf" download class="resume-btn">↓ Resume</a>
+    </div>
   </section>
-  </div>
+
+  <footer>
+    <span>© 2026 Shreyas Udupa</span>
+    <span style="font-family:var(--mono);font-size:0.63rem;letter-spacing:0.1em;">CHAMPAIGN, IL</span>
+  </footer>
 
   <script>
-    // Header background on scroll
+    // Nav on scroll
+    const nav = document.getElementById('site-nav');
     window.addEventListener('scroll', () => {
-      document.getElementById('site-header')
-        .classList.toggle('scrolled', window.scrollY > 50);
+      nav.classList.toggle('solid', window.scrollY > 60);
     });
-    document.querySelectorAll('.carousel').forEach(carousel => {
-    const inner = carousel.querySelector('.carousel-inner');
-    const slides = inner.children;
-    let idx = 0;
 
-    carousel.querySelector('.next')
-      .addEventListener('click', () => {
-        idx = (idx + 1) % slides.length;
-        inner.style.transform = `translateX(-${idx * 100}%)`;
-      });
-
-    carousel.querySelector('.prev')
-      .addEventListener('click', () => {
-        idx = (idx - 1 + slides.length) % slides.length;
-        inner.style.transform = `translateX(-${idx * 100}%)`;
-      });
-    });
-      const hero = document.getElementById('hero');
-    window.addEventListener('scroll', () => {
-      // change the 0 to something higher (e.g. 200) 
-      // if you only want it to flip after you scroll further
-      hero.classList.toggle('scrolled', window.scrollY > 0);
-  });
+    // Scroll reveal
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+    }, { threshold: 0.1 });
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
   </script>
 </body>
 </html>
