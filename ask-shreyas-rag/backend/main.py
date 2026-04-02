@@ -176,10 +176,10 @@ async def chat(req: ChatRequest):
     # 4. Call Groq
     try:
         completion = groq_client.chat.completions.create(
-            model="llama3-70b-8192",
-            messages=messages,
-            max_tokens=512,
-            temperature=0.65,
+    model="llama-3.3-70b-versatile",
+    messages=messages,
+    max_tokens=512,
+    temperature=0.65,
         )
         reply = completion.choices[0].message.content.strip()
     except Exception as e:

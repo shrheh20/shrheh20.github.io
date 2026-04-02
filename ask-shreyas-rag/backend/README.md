@@ -1,4 +1,4 @@
-# Ask Shreyas — AI Portfolio Chatbot (RAG Edition)
+pyt# Ask Shreyas — AI Portfolio Chatbot (RAG Edition)
 
 A conversational AI assistant embedded in a personal portfolio website. Answers recruiter and visitor questions about Shreyas Udupa by retrieving relevant passages from his **resume and LinkedIn profile** using a RAG (Retrieval-Augmented Generation) pipeline — powered by **Groq (Llama 3)** for responses and **WhatsApp notifications** via Twilio on every query.
 
