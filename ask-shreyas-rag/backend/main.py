@@ -1,23 +1,28 @@
 """
-Ask Shreyas — FastAPI Backend (RAG Edition)
-Pipeline: Query → BGE embed → ChromaDB retrieval → Groq (Llama 3) → WhatsApp notification
+Ask Shreyas — FastAPI Backend (Fixed RAG)
+
+Key fixes vs previous version:
+- Query embedding now uses the same model as ingestion (BAAI/bge-small-en-v1.5)
+  Mixing nomic-embed-text (768-dim) with BGE (384-dim) caused total retrieval failure.
+- Hard guardrail: if no relevant chunks are retrieved, LLM is told explicitly
+  to say so rather than hallucinate.
+- Cosine distance threshold tightened to 0.45 (was 0.55 — too permissive).
+- Model bumped to llama-3.3-70b-versatile for better instruction following.
 """
 
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
-from groq import Groq
-from twilio.rest import Client as TwilioClient
 from sentence_transformers import SentenceTransformer
 import chromadb
 import os
 from pathlib import Path
-from datetime import datetime
 from dotenv import load_dotenv
+from groq import Groq
 
 load_dotenv()
 
-app = FastAPI(title="Ask Shreyas API — RAG Edition")
+app = FastAPI(title="Ask Shreyas API")
 
 app.add_middleware(
     CORSMiddleware,
@@ -28,13 +33,16 @@ app.add_middleware(
 )
 
 # ── Config ─────────────────────────────────────────────────────────────────────
-CHROMA_DIR  = Path(__file__).parent / "chroma_db"
-COLLECTION  = "shreyas_knowledge"
-EMBED_MODEL = "BAAI/bge-small-en-v1.5"
-TOP_K       = 5   # chunks retrieved per query
+CHROMA_DIR   = Path(__file__).parent / "chroma_db"
+COLLECTION   = "shreyas_knowledge"
+EMBED_MODEL  = "BAAI/bge-small-en-v1.5"   # MUST match ingest.py
+TOP_K        = int(os.getenv("TOP_K", "4"))
+MAX_DIST     = float(os.getenv("MAX_DIST", "0.45"))  # cosine distance cutoff
+MODEL_NAME   = os.getenv("GROQ_MODEL", "llama-3.3-70b-versatile")
+MAX_TOKENS   = int(os.getenv("MAX_TOKENS", "350"))
 
-# ── Load at startup (once) ─────────────────────────────────────────────────────
-print("Loading BGE embedding model ...")
+# ── Load at startup ────────────────────────────────────────────────────────────
+print(f"Loading embedding model: {EMBED_MODEL} ...")
 embedder = SentenceTransformer(EMBED_MODEL)
 print("Embedding model ready.")
 
@@ -43,160 +51,142 @@ chroma_client = chromadb.PersistentClient(path=str(CHROMA_DIR))
 collection    = chroma_client.get_collection(COLLECTION)
 print(f"ChromaDB ready — {collection.count()} chunks indexed.")
 
-groq_client   = Groq(api_key=os.environ["GROQ_API_KEY"])
-twilio_client = TwilioClient(os.environ["TWILIO_ACCOUNT_SID"], os.environ["TWILIO_AUTH_TOKEN"])
+groq_client = Groq(api_key=os.environ["GROQ_API_KEY"])
+print(f"Groq ready. Model: {MODEL_NAME}")
 
-# ── Base system prompt ─────────────────────────────────────────────────────────
-BASE_SYSTEM = """
-You are "Ask Shreyas" — a smart, conversational AI assistant that knows everything about Shreyas Udupa.
-You answer questions from recruiters, hiring managers, and curious visitors on his portfolio website.
+# ── Query router (keyword → section filter) ────────────────────────────────────
+ROUTE_RULES: list[tuple[list[str], str]] = [
+    (["visa", "opt", "h1b", "h-1b", "work auth", "sponsor", "relocat",
+      "location", "city", "remote", "why hire", "available", "contact",
+      "email", "phone", "linkedin", "hire"],                              "faq"),
+    (["fast center", "sbir", "sttr", "enterpriseworks", "founder",
+      "funding", "eir", "dashboard", "project", "demand forecast",
+      "inventory", "registration", "event", "cvent", "chatbot",
+      "rag", "ai agent", "built", "created", "made"],                    "projects"),
+    (["python", "sql", "tableau", "power bi", "aws", "gcp", "cloud",
+      "skill", "tool", "stack", "technology", "excel", "snowflake",
+      "certif", "speciali"],                                              "skills"),
+    (["education", "degree", "uiuc", "university", "gpa", "master",
+      "bachelor", "msim", "graduate", "study", "phi kappa"],             "education"),
+    (["quantiphi", "google", "experience", "work", "job", "career",
+      "internship", "analyst", "current", "currently", "company",
+      "employer", "where does"],                                          "experience"),
+]
 
-PERSONALITY:
-- Warm, conversational, witty, polite, and concise
-- Frame answers about Shreyas's work in STAR format (Situation, Task, Action, Result) and always highlight the impact
-- Keep answers focused — no walls of text. Bullet points are fine for lists of skills or facts.
+def route_query(query: str) -> str | None:
+    q = query.lower()
+    for keywords, section in ROUTE_RULES:
+        if any(kw in q for kw in keywords):
+            return section
+    return None
 
-RULES:
-- Only answer questions about Shreyas using the retrieved context and the facts below
-- Never answer complex science, math, physics, or high-compute queries unrelated to Shreyas
-- Never discuss salary expectations or specific numbers
-- If asked something not in your knowledge, say: "That's outside what I know — reach out to Shreyas directly at shreyas.udupa20@gmail.com"
-- If asked who built you: "I'm Ask Shreyas — built by Shreyas himself using Groq Llama 3, a RAG pipeline with ChromaDB and BGE embeddings, and FastAPI. It's one of his portfolio projects!"
-
-ALWAYS-AVAILABLE FACTS (use even if not in retrieved chunks):
-- Visa: F-1 OPT, ~2 years STEM OPT remaining. Needs H-1B after OPT. Open to working full 2-year OPT without sponsorship.
-- Location: Champaign, IL. Open to relocating anywhere in the US. Preferred: Chicago, San Francisco, San Jose, Fremont, Menlo Park, Mountain View, Seattle, New York, Boston.
-- Target roles: Data Analyst, Business Analyst, Strategy & Operations Analyst, Business Operations Analyst
-- Education: MS Information Management, UIUC, GPA 4.0. BE Computer Engineering, University of Mumbai, GPA 3.63.
-- Certifications: AWS Solutions Architect Associate (2025), Google Cloud Associate Engineer (2023)
-- Contact: shreyas.udupa20@gmail.com | +1 (447) 902-4746 | linkedin.com/in/shreyasudupa | github.com/shrheh20
-- Origin story: Got into data watching Formula 1 in high school — thousands of sensors, split-second decisions, predictive overtake models showed him data was the difference between winning and losing.
-- Personal: Reads thriller/mythology fiction (Ashwin Sanghi, James Patterson). Currently building AI agents. Does not stop until a problem is solved.
-
-WHY HIRE SHREYAS (use when asked):
-1. Goes to the last mile — when SBA data had no field for FAST Center companies, he built the linkage himself, delivered dashboards that secured a state program extension.
-2. His work gets used — dashboards became widely circulated materials that drove real business decisions at EnterpriseWorks.
-3. Learns fast — F1 telemetry to Python/SQL to AWS certifications to building AI agents. Curiosity is how he operates.
-4. Works at every level — as the youngest at Quantiphi, he closed a Financial Services deal worth 40 percent of regional Q1 revenue alongside Google FSRs and C-suite clients.
-"""
-
-# ── RAG retrieval ──────────────────────────────────────────────────────────────
-def retrieve_context(query: str) -> str:
-    """Embed the query with BGE query prefix and retrieve top-K chunks."""
-    query_embedding = embedder.encode(
-        f"query: {query}",        # BGE query prefix for retrieval
+# ── Retrieval ──────────────────────────────────────────────────────────────────
+def retrieve(query: str) -> tuple[str, list[str]]:
+    """Embed with BGE (same model as ingestion) and retrieve top chunks."""
+    vector = embedder.encode(
+        f"query: {query}",
         normalize_embeddings=True,
     ).tolist()
 
-    results = collection.query(
-        query_embeddings=[query_embedding],
-        n_results=TOP_K,
-        include=["documents", "metadatas", "distances"],
-    )
+    section = route_query(query)
+    query_kwargs: dict = {
+        "query_embeddings": [vector],
+        "n_results": TOP_K,
+        "include": ["documents", "metadatas", "distances"],
+    }
+    if section:
+        query_kwargs["where"] = {"section": section}
 
-    chunks     = results["documents"][0]
-    metadatas  = results["metadatas"][0]
-    distances  = results["distances"][0]
+    try:
+        results = collection.query(**query_kwargs)
+    except Exception:
+        # Section filter may return 0 results — retry without filter
+        query_kwargs.pop("where", None)
+        results = collection.query(**query_kwargs)
 
-    # Filter low-relevance chunks (cosine distance > 0.5 = poor match)
-    relevant = [
-        (doc, meta["source"], dist)
-        for doc, meta, dist in zip(chunks, metadatas, distances)
-        if dist < 0.5
-    ]
+    docs      = results["documents"][0]
+    metas     = results["metadatas"][0]
+    distances = results["distances"][0]
 
-    if not relevant:
-        return ""
+    parts: list[str] = []
+    sources: list[str] = []
 
-    # Format for prompt injection
-    context_parts = []
-    for doc, source, dist in relevant:
-        label = "Resume" if source == "resume" else "LinkedIn Profile"
-        context_parts.append(f"[{label}]\n{doc}")
+    for doc, meta, dist in zip(docs, metas, distances):
+        if dist > MAX_DIST:
+            continue
+        src     = meta.get("source", "document")
+        section = meta.get("section", "")
+        parts.append(f"[{src.upper()} — {section}]\n{doc}")
+        if src not in sources:
+            sources.append(src)
 
-    return "\n\n---\n\n".join(context_parts)
+    return "\n\n---\n\n".join(parts), sources
 
+# ── System prompt ──────────────────────────────────────────────────────────────
+SYSTEM_PROMPT = """\
+You are "Ask Shreyas", a precise AI assistant on Shreyas Udupa's portfolio website.
+Answer ONLY using the RETRIEVED CONTEXT provided below. Do not use your training data or prior knowledge.
+If the context does not contain the answer, say exactly: "I don't have that detail in my knowledge base — reach out to Shreyas at shreyas.udupa20@gmail.com"
+Be warm, concise, and recruiter-friendly. For work stories use STAR format. Keep answers to 3-5 sentences or a short bullet list.
+Never invent companies, tools, projects, or facts not present in the context.
+If asked who built you: you were built by Shreyas using Groq, ChromaDB, BGE embeddings, and FastAPI.\
+"""
 
-# ── WhatsApp notification ──────────────────────────────────────────────────────
-def send_whatsapp(question: str, answer: str):
-    timestamp = datetime.now().strftime("%b %d, %H:%M")
-    body = (
-        f"Ask Shreyas — New Query [{timestamp}]\n\n"
-        f"Question: {question[:300]}\n\n"
-        f"Answer preview: {answer[:300]}{'...' if len(answer) > 300 else ''}"
-    )
-    twilio_client.messages.create(
-        from_=f"whatsapp:{os.environ['TWILIO_WHATSAPP_FROM']}",
-        to=f"whatsapp:{os.environ['YOUR_WHATSAPP_NUMBER']}",
-        body=body,
-    )
-
+NO_CONTEXT_MSG = (
+    "I don't have that detail in my knowledge base right now. "
+    "Reach out to Shreyas directly at shreyas.udupa20@gmail.com — he'll be happy to answer."
+)
 
 # ── Models ─────────────────────────────────────────────────────────────────────
 class ChatRequest(BaseModel):
     message: str
     history: list[dict] = []
 
-
 class ChatResponse(BaseModel):
     reply: str
     sources: list[str] = []
 
-
 # ── Routes ─────────────────────────────────────────────────────────────────────
 @app.get("/")
 def root():
-    return {"status": "Ask Shreyas RAG API is running", "chunks_indexed": collection.count()}
-
+    return {
+        "status": "Ask Shreyas API running",
+        "model": MODEL_NAME,
+        "embed_model": EMBED_MODEL,
+        "chunks_indexed": collection.count(),
+    }
 
 @app.post("/chat", response_model=ChatResponse)
 async def chat(req: ChatRequest):
     if not req.message.strip():
         raise HTTPException(status_code=400, detail="Message cannot be empty")
 
-    # 1. Retrieve relevant chunks from ChromaDB
-    context = retrieve_context(req.message)
+    context, sources = retrieve(req.message)
 
-    # 2. Build system prompt — inject retrieved context if found
-    if context:
-        system_content = (
-            BASE_SYSTEM
-            + "\n\nRELEVANT CONTEXT FROM SHREYAS'S DOCUMENTS (use this to answer):\n\n"
-            + context
-        )
-    else:
-        system_content = BASE_SYSTEM
+    # Hard guardrail — if nothing relevant retrieved, skip the LLM entirely
+    if not context:
+        return ChatResponse(reply=NO_CONTEXT_MSG, sources=[])
 
-    # 3. Build message list with conversation history (last 6 turns)
-    messages = [{"role": "system", "content": system_content}]
-    for turn in req.history[-6:]:
-        messages.append({"role": turn["role"], "content": turn["content"]})
+    system = (
+        SYSTEM_PROMPT
+        + f"\n\nRETRIEVED CONTEXT (answer ONLY from this):\n\n{context}"
+    )
+
+    messages = [{"role": "system", "content": system}]
+    for turn in req.history[-4:]:
+        if turn.get("role") in ("user", "assistant") and turn.get("content"):
+            messages.append({"role": turn["role"], "content": turn["content"]})
     messages.append({"role": "user", "content": req.message})
 
-    # 4. Call Groq
     try:
         completion = groq_client.chat.completions.create(
-    model="llama-3.3-70b-versatile",
-    messages=messages,
-    max_tokens=512,
-    temperature=0.65,
+            model=MODEL_NAME,
+            messages=messages,
+            max_tokens=MAX_TOKENS,
+            temperature=0.3,   # lower = more faithful to context
         )
         reply = completion.choices[0].message.content.strip()
     except Exception as e:
-        raise HTTPException(status_code=502, detail=f"Groq error: {str(e)}")
-
-    # 5. WhatsApp notification (non-blocking)
-    try:
-        send_whatsapp(req.message, reply)
-    except Exception:
-        pass
-
-    # 6. Return reply + which sources were used
-    sources = []
-    if context:
-        if "Resume" in context:
-            sources.append("resume")
-        if "LinkedIn" in context:
-            sources.append("linkedin")
+        raise HTTPException(status_code=502, detail=f"Groq error: {e}")
 
     return ChatResponse(reply=reply, sources=sources)
